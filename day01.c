@@ -1,19 +1,16 @@
-#include <stdio.h>
-#include <stdlib.h>
+#include "base.h"
 
-#define mod(x, n) (((x) % (n) + (n)) % (n))
-
-int
+i32
 pt1(const char *buf, size_t size)
 {
     const char *ptr = buf;
-    int pass = 0;
-    int dial = 50;
+    i32 pass = 0;
+    i32 dial = 50;
 
     while (ptr < buf + size)
     {
         char dir = *ptr++;
-        int count = atoi(ptr);
+        i32 count = atoi(ptr);
         while (*ptr != '\n' && ptr < buf + size)
             ptr++;
         ptr++;
@@ -29,17 +26,17 @@ pt1(const char *buf, size_t size)
     return pass;
 }
 
-int
+i32
 pt2(const char *buf, size_t size)
 {
     const char *ptr = buf;
-    int pass = 0;
-    int dial = 50;
+    i32 pass = 0;
+    i32 dial = 50;
 
     while (ptr < buf + size)
     {
         char dir = *ptr++;
-        int count = atoi(ptr);
+        i32 count = atoi(ptr);
         while (*ptr != '\n' && ptr < buf + size)
             ptr++;
         ptr++;
@@ -63,12 +60,12 @@ pt2(const char *buf, size_t size)
     return pass;
 }
 
-int
+i32
 main()
 {
     FILE *f = fopen("data/day01.txt", "r");
     fseek(f, 0, SEEK_END);
-    long filesize = ftell(f);
+    i64 filesize = ftell(f);
     rewind(f);
 
     char *buf = (char *)malloc(filesize * sizeof(char));
