@@ -1,8 +1,12 @@
 #pragma once
 
+#include <assert.h>
+#include <math.h>
+#include <stdbool.h>
 #include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 #define global static
 #define internal static
