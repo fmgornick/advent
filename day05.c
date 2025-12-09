@@ -15,28 +15,16 @@ struct interval_tree_node {
     interval intervals[SIZE];
 };
 
-void
-quicksort(u64 arr[SIZE], i32 lo, i32 hi)
+i32
+u64_cmp(const void *a, const void *b)
 {
-    if (lo >= hi) return;
-    u64 pivot = arr[hi];
-    i32 i = lo - 1;
-    for (i32 j = lo; j <= hi - 1; j++)
-    {
-        if (arr[j] <= pivot)
-        {
-            i++;
-            u64 tmp = arr[i];
-            arr[i] = arr[j];
-            arr[j] = tmp;
-        }
-    }
-    i32 pivotIdx = i + 1;
-    u64 tmp = arr[pivotIdx];
-    arr[pivotIdx] = arr[hi];
-    arr[hi] = tmp;
-    quicksort(arr, lo, pivotIdx - 1);
-    quicksort(arr, pivotIdx + 1, hi);
+    return cmp(*(u64 *)a, *(u64 *)b);
+}
+
+i32
+interval_cmp(const void *a, const void *b)
+{
+    return cmp((*(interval *)a).m, (*(interval *)b).m);
 }
 
 void
@@ -46,30 +34,6 @@ dedup(u64 arr[SIZE], u32 *size)
     for (u32 i = 1; i < *size; i++)
         if (arr[i] != arr[i - 1]) arr[newSize++] = arr[i];
     *size = newSize;
-}
-
-void
-quicksort_intervals(interval arr[SIZE], i32 lo, i32 hi)
-{
-    if (lo >= hi) return;
-    u64 pivot = arr[hi].m;
-    i32 i = lo - 1;
-    for (i32 j = lo; j <= hi - 1; j++)
-    {
-        if (arr[j].m <= pivot)
-        {
-            i++;
-            interval tmp = arr[i];
-            arr[i] = arr[j];
-            arr[j] = tmp;
-        }
-    }
-    i32 pivotIdx = i + 1;
-    interval tmp = arr[pivotIdx];
-    arr[pivotIdx] = arr[hi];
-    arr[hi] = tmp;
-    quicksort_intervals(arr, lo, pivotIdx - 1);
-    quicksort_intervals(arr, pivotIdx + 1, hi);
 }
 
 interval_tree_node *
@@ -123,7 +87,7 @@ intersect(interval_tree_node *node, interval query)
 u64
 pt1(interval intervals[SIZE], u32 numIntervals, u64 queries[SIZE], u64 numQueries)
 {
-    quicksort_intervals(intervals, 0, numIntervals - 1);
+    qsort(intervals, numIntervals, sizeof(interval), interval_cmp);
     interval_tree_node *node = build_interval_tree(intervals, numIntervals);
     u64 res = 0;
     for (i32 i = 0; i < numQueries; i++)
@@ -140,7 +104,7 @@ pt1(interval intervals[SIZE], u32 numIntervals, u64 queries[SIZE], u64 numQuerie
 u64
 pt2(interval intervals[SIZE], u32 numIntervals)
 {
-    quicksort_intervals(intervals, 0, numIntervals - 1);
+    qsort(intervals, numIntervals, sizeof(interval), interval_cmp);
     interval_tree_node *node = build_interval_tree(intervals, numIntervals);
     u64 endpoints[SIZE];
     u32 numEndpoints = numIntervals * 2;
@@ -149,7 +113,7 @@ pt2(interval intervals[SIZE], u32 numIntervals)
         endpoints[2 * i] = intervals[i].m;
         endpoints[2 * i + 1] = intervals[i].M;
     }
-    quicksort(endpoints, 0, numEndpoints - 1);
+    qsort(endpoints, numEndpoints, sizeof(u64), u64_cmp);
     dedup(endpoints, &numEndpoints);
 
     interval subints[SIZE];

@@ -22,6 +22,8 @@
 #define max(A, B) (((A) > (B)) ? (A) : (B))
 #define clamp(A, X, B) (((X) < (A)) ? (A) : ((X) > (B)) ? (B) : (X))
 #define mod(X, N) (((X) % (N) + (N)) % (N))
+#define abs(X) ((X) < 0 ? (-(X)) : (X))
+#define cmp(A, B) ((A) < (B) ? (-1) : ((A) > (B) ? (1) : (0)))
 
 typedef uint8_t u8;
 typedef uint16_t u16;
